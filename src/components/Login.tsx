@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { User, Lock, Eye, EyeOff } from 'lucide-react'
+import logo from '../Assets/Logo.png'
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('')
@@ -33,11 +34,15 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8 relative">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <div className="mx-auto h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center">
-            <User className="h-8 w-8 text-white" />
+          <div className="mx-auto flex justify-center">
+            <img 
+              src={logo} 
+              alt="Auntrack Calendar Logo" 
+              className="h-80 w-auto"
+            />
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Auntrack Calendar
@@ -114,6 +119,13 @@ const Login: React.FC = () => {
 
 
         </form>
+      </div>
+      
+      {/* Developer Credit */}
+      <div className="absolute bottom-4 right-4">
+        <p className="text-xs text-gray-500">
+          Developed by - Aaron Saldanha
+        </p>
       </div>
     </div>
   )
