@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  body {
+    @apply bg-gray-50 text-gray-900;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  /* Calendar Container */
+  .calendar-container {
+    display: flex;
+    min-height: 600px;
+  }
+
+  /* Category Column - Fixed Width */
+  .category-column {
+    width: 200px;
+    flex-shrink: 0;
+    border-right: 1px solid #e5e7eb;
+  }
+
+  .category-header {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .category-row {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .category-row:last-child {
+    border-bottom: none;
+  }
+
+  /* Calendar Grid - Scrollable */
+  .calendar-header {
+    display: grid;
+    grid-template-columns: repeat(var(--days-in-month, 31), 120px);
+    gap: 0;
+    min-width: max-content;
+    height: 64px;
+  }
+
+  .calendar-header > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+  }
+
+  .calendar-header > div:last-child {
+    border-right: none;
+  }
+
+  /* Calendar Grid Container */
+  .calendar-grid-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .calendar-grid-row {
+    display: grid;
+    grid-template-columns: repeat(var(--days-in-month, 31), 120px);
+    gap: 0;
+    min-width: max-content;
+    height: 80px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .calendar-grid-row:last-child {
+    border-bottom: none;
+  }
+
+  .calendar-cell {
+    position: relative;
+    height: 100%;
+    min-height: 80px;
+    border-right: 1px solid #e5e7eb;
+    padding: 0.5rem;
+  }
+
+  .calendar-cell:last-child {
+    border-right: none;
+  }
+
+  /* Drag and Drop Styles */
+  .calendar-cell {
+    transition: background-color 0.2s ease;
+  }
+
+  .calendar-cell:hover {
+    background-color: #f8fafc;
+  }
+
+  .event-card {
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    position: absolute;
+    z-index: 10;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    min-height: 60px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+
+  .event-card:active {
+    cursor: grabbing;
+  }
+
+  .event-card * {
+    pointer-events: none;
+  }
+
+  .event-card button {
+    pointer-events: auto;
+  }
+
+  .event-edit-btn,
+  .event-delete-btn {
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .event-card:hover .event-edit-btn,
+  .event-card:hover .event-delete-btn {
+    opacity: 1;
+  }
+
+  /* Scrollable container */
+  .flex-1.overflow-x-auto {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+}

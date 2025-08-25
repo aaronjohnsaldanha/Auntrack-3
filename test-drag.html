@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag Test</title>
+    <style>
+        .draggable {
+            width: 100px;
+            height: 50px;
+            background-color: #3b82f6;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            user-select: none;
+            margin: 10px;
+        }
+        .draggable:active {
+            cursor: grabbing;
+        }
+        .drop-zone {
+            width: 200px;
+            height: 100px;
+            border: 2px dashed #ccc;
+            margin: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9fafb;
+        }
+        .drop-zone.drag-over {
+            background-color: #dbeafe;
+            border-color: #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <h1>Drag and Drop Test</h1>
+    
+    <div class="draggable" draggable="true" ondragstart="handleDragStart(event)" ondragend="handleDragEnd(event)">
+        Drag Me
+    </div>
+    
+    <div class="drop-zone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+        Drop Zone
+    </div>
+    
+    <div id="status"></div>
+    
+    <script>
+        function handleDragStart(e) {
+            console.log('Drag started');
+            e.dataTransfer.setData('text/plain', 'test-data');
+            e.dataTransfer.effectAllowed = 'move';
+            document.getElementById('status').textContent = 'Drag started';
+        }
+        
+        function handleDragEnd(e) {
+            console.log('Drag ended');
+            document.getElementById('status').textContent = 'Drag ended';
+        }
+        
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            e.currentTarget.classList.add('drag-over');
+        }
+        
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            const data = e.dataTransfer.getData('text/plain');
+            console.log('Dropped:', data);
+            document.getElementById('status').textContent = 'Dropped: ' + data;
+        }
+    </script>
+</body>
+</html>
