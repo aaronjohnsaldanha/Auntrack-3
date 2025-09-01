@@ -24,15 +24,19 @@ const EditCategoryModal: React.FC<EditCategoryModalProps> = ({ category, onClose
     }
   }, [category])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    updateCategory(category.id, {
-      name: formData.name,
-      color: formData.color
-    })
-
-    onUpdate()
+    try {
+      await updateCategory(category.id, {
+        name: formData.name,
+        color: formData.color
+      })
+      onUpdate()
+    } catch (error) {
+      console.error('Error updating category:', error)
+      alert(`Error updating category: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

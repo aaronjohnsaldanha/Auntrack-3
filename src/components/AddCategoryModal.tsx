@@ -27,15 +27,19 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ onClose, onAdd }) =
     '#6366f1'  // indigo
   ]
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    addCategory({
-      name: formData.name,
-      color: formData.color
-    })
-
-    onAdd()
+    try {
+      await addCategory({
+        name: formData.name,
+        color: formData.color
+      })
+      onAdd()
+    } catch (error) {
+      console.error('Error adding category:', error)
+      alert(`Error adding category: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

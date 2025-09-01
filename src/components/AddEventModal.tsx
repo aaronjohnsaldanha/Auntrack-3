@@ -23,7 +23,7 @@ const AddEventModal: React.FC<AddEventModalProps> = ({ onClose, onAdd }) => {
     description: ''
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     const category = categories.find(cat => cat.name === formData.category)
@@ -49,17 +49,21 @@ const AddEventModal: React.FC<AddEventModalProps> = ({ onClose, onAdd }) => {
       return
     }
 
-    addEvent({
-      title: formData.title,
-      category_id: category.id,
-      category_name: category.name,
-      start_date: startDateTime.toISOString(),
-      end_date: endDateTime.toISOString(),
-      color: category.color,
-      description: formData.description
-    })
-
-    onAdd()
+    try {
+      await addEvent({
+        title: formData.title,
+        category_id: category.id,
+        category_name: category.name,
+        start_date: startDateTime.toISOString(),
+        end_date: endDateTime.toISOString(),
+        color: category.color,
+        description: formData.description
+      })
+      onAdd()
+    } catch (error) {
+      console.error('Error adding event:', error)
+      alert(`Error adding event: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {

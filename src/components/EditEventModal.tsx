@@ -62,7 +62,7 @@ const EditEventModal: React.FC<EditEventModalProps> = ({ event, onClose, onUpdat
     }
   }, [event, categories])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     const category = categories.find(cat => cat.id === formData.category_id)
@@ -88,16 +88,20 @@ const EditEventModal: React.FC<EditEventModalProps> = ({ event, onClose, onUpdat
       return
     }
 
-    updateEvent(event.id, {
-      title: formData.title,
-      category_id: formData.category_id,
-      start_date: startDateTime.toISOString(),
-      end_date: endDateTime.toISOString(),
-      color: category.color,
-      description: formData.description
-    })
-
-    onUpdate()
+    try {
+      await updateEvent(event.id, {
+        title: formData.title,
+        category_id: formData.category_id,
+        start_date: startDateTime.toISOString(),
+        end_date: endDateTime.toISOString(),
+        color: category.color,
+        description: formData.description
+      })
+      onUpdate()
+    } catch (error) {
+      console.error('Error updating event:', error)
+      alert(`Error updating event: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {

@@ -1,8 +1,10 @@
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = 'http://127.0.0.1:3001/api';
 
 // Helper function to get auth token
 const getAuthToken = () => {
-  return localStorage.getItem('authToken') || localStorage.getItem('token');
+  const token = localStorage.getItem('authToken') || localStorage.getItem('token');
+  console.log('Getting auth token:', token ? 'Token exists' : 'No token found');
+  return token;
 };
 
 // Helper function to make authenticated requests
@@ -14,17 +16,27 @@ const authenticatedRequest = async (endpoint: string, options: RequestInit = {})
     ...options.headers,
   };
 
+  console.log('Making authenticated request to:', `${API_BASE_URL}${endpoint}`);
+  console.log('Request headers:', headers);
+  console.log('Request body:', options.body);
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
   });
 
+  console.log('Response status:', response.status);
+  console.log('Response ok:', response.ok);
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Network error' }));
+    console.error('Response error:', error);
     throw new Error(error.error || `HTTP error! status: ${response.status}`);
   }
 
-  return response.json();
+  const result = await response.json();
+  console.log('Response data:', result);
+  return result;
 };
 
 // Authentication API
@@ -44,8 +56,10 @@ export const authAPI = {
     }
 
     const data = await response.json();
+    console.log('Login response data:', data);
     localStorage.setItem('authToken', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
+    console.log('Token stored in localStorage:', localStorage.getItem('authToken') ? 'Yes' : 'No');
     return data;
   },
 
@@ -71,10 +85,18 @@ export const categoriesAPI = {
   },
 
   create: async (category: { name: string; color: string }) => {
-    return authenticatedRequest('/categories', {
-      method: 'POST',
-      body: JSON.stringify(category),
-    });
+    console.log('Making API request to create category:', category)
+    try {
+      const result = await authenticatedRequest('/categories', {
+        method: 'POST',
+        body: JSON.stringify(category),
+      });
+      console.log('Category created via API:', result)
+      return result
+    } catch (error) {
+      console.error('API error creating category:', error)
+      throw error
+    }
   },
 
   update: async (id: number, category: { name?: string; color?: string }) => {

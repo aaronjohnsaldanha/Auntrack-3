@@ -76,7 +76,7 @@ function initializeDatabase() {
     // Categories table
     db.run(`CREATE TABLE IF NOT EXISTS categories (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
+      name TEXT UNIQUE NOT NULL,
       color TEXT NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`, (err) => {
@@ -233,21 +233,31 @@ app.get('/api/categories', authenticateToken, (req, res) => {
 
 // Create category
 app.post('/api/categories', authenticateToken, (req, res) => {
+  console.log('Category creation request received:', req.body);
   const { name, color } = req.body;
   
   if (!name || !color) {
+    console.log('Validation failed: missing name or color');
     return res.status(400).json({ error: 'Name and color are required' });
   }
   
+  console.log('Inserting category into database:', { name, color });
   db.run('INSERT INTO categories (name, color) VALUES (?, ?)', [name, color], function(err) {
     if (err) {
+      console.error('Database error inserting category:', err);
+      if (err.message.includes('UNIQUE constraint failed')) {
+        return res.status(400).json({ error: 'Category name already exists' });
+      }
       return res.status(500).json({ error: 'Database error' });
     }
     
+    console.log('Category inserted with ID:', this.lastID);
     db.get('SELECT * FROM categories WHERE id = ?', [this.lastID], (err, category) => {
       if (err) {
+        console.error('Database error retrieving category:', err);
         return res.status(500).json({ error: 'Database error' });
       }
+      console.log('Category retrieved successfully:', category);
       res.status(201).json(category);
     });
   });
@@ -562,6 +572,6 @@ app.delete('/api/users/:id', authenticateToken, (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

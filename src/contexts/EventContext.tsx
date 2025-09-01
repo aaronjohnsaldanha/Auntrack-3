@@ -80,6 +80,13 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
       ])
       console.log('Categories loaded:', categoriesData)
       console.log('Events loaded:', eventsData)
+      
+      // Check if events have the correct structure
+      if (eventsData && eventsData.length > 0) {
+        console.log('First event structure:', eventsData[0])
+        console.log('Event properties:', Object.keys(eventsData[0]))
+      }
+      
       setCategories(categoriesData)
       setEvents(eventsData)
     } catch (error) {
@@ -155,6 +162,7 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
       ))
     } catch (error) {
       console.error('Error updating event:', error)
+      throw error // Re-throw to allow error handling in components
     }
   }
 
@@ -164,15 +172,19 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
       setEvents(prev => prev.filter(event => event.id !== id))
     } catch (error) {
       console.error('Error deleting event:', error)
+      throw error // Re-throw to allow error handling in components
     }
   }
 
   const addCategory = async (category: Omit<Category, 'id'>) => {
     try {
+      console.log('Adding category:', category)
       const newCategory = await categoriesAPI.create(category)
+      console.log('Category created successfully:', newCategory)
       setCategories(prev => [...prev, newCategory])
     } catch (error) {
       console.error('Error adding category:', error)
+      throw error // Re-throw to allow error handling in components
     }
   }
 
@@ -184,6 +196,7 @@ export const EventProvider: React.FC<EventProviderProps> = ({ children }) => {
       ))
     } catch (error) {
       console.error('Error updating category:', error)
+      throw error // Re-throw to allow error handling in components
     }
   }
 

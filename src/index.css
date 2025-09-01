@@ -108,6 +108,8 @@
     background-color: #f8fafc;
   }
 
+
+
   .event-card {
     cursor: grab;
     user-select: none;
@@ -121,6 +123,44 @@
     min-height: 60px;
     overflow: hidden;
     transition: all 0.2s ease;
+    /* Ensure seamless multi-day cards */
+    background-clip: border-box;
+    border: none;
+    outline: none;
+    /* Prevent visual breaks */
+    transform-origin: center;
+    backface-visibility: hidden;
+  }
+
+  /* Multi-day event styling */
+  .event-card.multi-day-hover {
+    /* Ensure seamless connection between days */
+    background-clip: border-box;
+    /* Remove any gaps */
+    margin: 0;
+    padding: 0;
+    /* Higher z-index to appear above cell borders */
+    z-index: 15;
+    /* Ensure hover area covers the entire card */
+    pointer-events: auto;
+  }
+
+  /* Alternative approach: Use JavaScript to handle border hiding */
+  .calendar-cell.multi-day-start {
+    border-right-color: transparent;
+  }
+
+  .calendar-cell.multi-day-middle {
+    border-right-color: transparent;
+  }
+
+  .calendar-cell.multi-day-end {
+    border-right: none;
+  }
+
+  .event-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
   }
 
   .event-card:active {
@@ -139,6 +179,9 @@
   .event-delete-btn {
     opacity: 0;
     transition: opacity 0.2s;
+    pointer-events: auto !important;
+    position: relative;
+    z-index: 20;
   }
 
   .event-card:hover .event-edit-btn,

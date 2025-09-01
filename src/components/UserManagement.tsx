@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { User, Plus, Edit, Trash2, Eye, EyeOff, Shield, Mail, Lock } from 'lucide-react'
+import { Plus, Edit, Trash2, Eye, EyeOff } from 'lucide-react'
 import { usersAPI } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -80,11 +80,9 @@ const UserManagement: React.FC<UserManagementProps> = ({ onClose }) => {
     
     try {
       if (editingUser) {
-        const updateData = { ...formData }
-        if (!updateData.password) {
-          delete updateData.password
-        }
-        await usersAPI.update(editingUser.id, updateData)
+        const { password, ...updateData } = formData
+        const finalUpdateData = password ? { ...updateData, password } : updateData
+        await usersAPI.update(editingUser.id, finalUpdateData)
       } else {
         await usersAPI.create(formData)
       }
